@@ -1,0 +1,294 @@
+@import "@nextui-org/theme/dist/index.css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --gold: oklch(0.75 0.12 85);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* NextUI color tokens */
+  --nextui-default-50: #fafafa;
+  --nextui-default-100: #f4f4f5;
+  --nextui-default-200: #e4e4e7;
+  --nextui-default-300: #d4d4d8;
+  --nextui-default-400: #a1a1aa;
+  --nextui-default-500: #71717a;
+  --nextui-default-600: #52525b;
+  --nextui-default-700: #3f3f46;
+  --nextui-default-800: #27272a;
+  --nextui-default-900: #18181b;
+  --nextui-primary: var(--primary);
+  --nextui-primary-foreground: var(--primary-foreground);
+  --nextui-success-50: #f0fdf4;
+  --nextui-success-100: #dcfce7;
+  --nextui-success-200: #bbf7d0;
+  --nextui-success-300: #86efac;
+  --nextui-success-400: #4ade80;
+  --nextui-success-500: #22c55e;
+  --nextui-success-600: #16a34a;
+  --nextui-success-700: #15803d;
+  --nextui-success-800: #166534;
+  --nextui-success-900: #14532d;
+  --nextui-danger-50: #fef2f2;
+  --nextui-danger-100: #fee2e2;
+  --nextui-danger-200: #fecaca;
+  --nextui-danger-300: #fca5a5;
+  --nextui-danger-400: #f87171;
+  --nextui-danger-500: #ef4444;
+  --nextui-danger-600: #dc2626;
+  --nextui-danger-700: #b91c1c;
+  --nextui-danger-800: #991b1b;
+  --nextui-danger-900: #7f1d1d;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --gold: oklch(0.65 0.15 75);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+  
+  /* NextUI color tokens - dark */
+  --nextui-default-50: #18181b;
+  --nextui-default-100: #27272a;
+  --nextui-default-200: #3f3f46;
+  --nextui-default-300: #52525b;
+  --nextui-default-400: #71717a;
+  --nextui-default-500: #a1a1aa;
+  --nextui-default-600: #d4d4d8;
+  --nextui-default-700: #e4e4e7;
+  --nextui-default-800: #f4f4f5;
+  --nextui-default-900: #fafafa;
+  --nextui-primary: var(--primary);
+  --nextui-primary-foreground: var(--primary-foreground);
+  --nextui-success-50: #14532d;
+  --nextui-success-100: #166534;
+  --nextui-success-200: #15803d;
+  --nextui-success-300: #16a34a;
+  --nextui-success-400: #22c55e;
+  --nextui-success-500: #4ade80;
+  --nextui-success-600: #86efac;
+  --nextui-success-700: #bbf7d0;
+  --nextui-success-800: #dcfce7;
+  --nextui-success-900: #f0fdf4;
+  --nextui-danger-50: #7f1d1d;
+  --nextui-danger-100: #991b1b;
+  --nextui-danger-200: #b91c1c;
+  --nextui-danger-300: #dc2626;
+  --nextui-danger-400: #ef4444;
+  --nextui-danger-500: #f87171;
+  --nextui-danger-600: #fca5a5;
+  --nextui-danger-700: #fecaca;
+  --nextui-danger-800: #fee2e2;
+  --nextui-danger-900: #fef2f2;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-gold: var(--gold);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* NextUI color mappings */
+  --color-default-50: var(--nextui-default-50);
+  --color-default-100: var(--nextui-default-100);
+  --color-default-200: var(--nextui-default-200);
+  --color-default-300: var(--nextui-default-300);
+  --color-default-400: var(--nextui-default-400);
+  --color-default-500: var(--nextui-default-500);
+  --color-default-600: var(--nextui-default-600);
+  --color-default-700: var(--nextui-default-700);
+  --color-default-800: var(--nextui-default-800);
+  --color-default-900: var(--nextui-default-900);
+  --color-success-50: var(--nextui-success-50);
+  --color-success-100: var(--nextui-success-100);
+  --color-success-200: var(--nextui-success-200);
+  --color-success-300: var(--nextui-success-300);
+  --color-success-400: var(--nextui-success-400);
+  --color-success-500: var(--nextui-success-500);
+  --color-success-600: var(--nextui-success-600);
+  --color-success-700: var(--nextui-success-700);
+  --color-success-800: var(--nextui-success-800);
+  --color-success-900: var(--nextui-success-900);
+  --color-danger-50: var(--nextui-danger-50);
+  --color-danger-100: var(--nextui-danger-100);
+  --color-danger-200: var(--nextui-danger-200);
+  --color-danger-300: var(--nextui-danger-300);
+  --color-danger-400: var(--nextui-danger-400);
+  --color-danger-500: var(--nextui-danger-500);
+  --color-danger-600: var(--nextui-danger-600);
+  --color-danger-700: var(--nextui-danger-700);
+  --color-danger-800: var(--nextui-danger-800);
+  --color-danger-900: var(--nextui-danger-900);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
