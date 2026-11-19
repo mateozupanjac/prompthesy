@@ -1,63 +1,48 @@
 import { PrismaClient } from "@prisma/client";
+
+import {
+  HEXAGRAMS,
+  TRIGRAMS,
+  hexagramBinary,
+  trigramByKey,
+  type TrigramKey,
+} from "../lib/iching/canonical.ts";
+
 import { hexSlice } from "./hex_en_slice.ts";
 
 const prisma = new PrismaClient();
 
 const LINE_KEYS = [1, 2, 3, 4, 5, 6];
+
 type LineNo = (typeof LINE_KEYS)[number];
 type Lines = { [k in LineNo]: string };
 
-// Canonical 8 trigrams (bottom→top bits), English names
-const TRIGRAMS = [
-  {
-    id: 1,
-    key: "QIAN",
-    name: "Qian – Heaven",
-    meaning: "heaven, creative, strong, father",
-  },
-  {
-    id: 2,
-    key: "KUN",
-    name: "Kun – Earth",
-    meaning: "earth, receptive, devoted, mother",
-  },
-  {
-    id: 3,
-    key: "ZHEN",
+// English names for the 8 trigrams; id/binary/hanzi/pinyin come from lib/iching/canonical
+const TRIGRAM_NAMES: Record<TrigramKey, { name: string; meaning: string }> = {
+  QIAN: { name: "Qian – Heaven", meaning: "heaven, creative, strong, father" },
+  KUN: { name: "Kun – Earth", meaning: "earth, receptive, devoted, mother" },
+  ZHEN: {
     name: "Zhen – Thunder",
     meaning: "thunder, arousing, movement, eldest son",
   },
-  {
-    id: 4,
-    key: "KAN",
-    name: "Kan – Water",
-    meaning: "water, abyss, danger, middle son",
-  },
-  {
-    id: 5,
-    key: "GEN",
+  KAN: { name: "Kan – Water", meaning: "water, abyss, danger, middle son" },
+  GEN: {
     name: "Gen – Mountain",
     meaning: "mountain, stillness, immovable, youngest son",
   },
-  {
-    id: 6,
-    key: "XUN",
+  XUN: {
     name: "Xun – Wind/Wood",
     meaning: "wind, wood, gentle, eldest daughter",
   },
-  {
-    id: 7,
-    key: "LI",
+  LI: {
     name: "Li – Fire",
     meaning: "fire, brightness, clinging, middle daughter",
   },
-  {
-    id: 8,
-    key: "DUI",
+  DUI: {
     name: "Dui – Lake",
     meaning: "lake, joy, pleasure, youngest daughter",
   },
-] as const;
+};
 
 function slugify(s: string) {
   return s
@@ -76,20 +61,13 @@ function toLinesArray(lines: Lines): { number: LineNo; text: string }[] {
 }
 
 async function seedTrigrams() {
-  for (const trigram of TRIGRAMS) {
+  for (const { id, ...trigram } of TRIGRAMS) {
+    const data = { ...trigram, ...TRIGRAM_NAMES[trigram.key] };
+
     await prisma.trigram.upsert({
-      where: { id: trigram.id },
-      update: {
-        key: trigram.key,
-        name: trigram.name,
-        meaning: trigram.meaning,
-      },
-      create: {
-        id: trigram.id,
-        key: trigram.key,
-        name: trigram.name,
-        meaning: trigram.meaning,
-      },
+      where: { id },
+      update: data,
+      create: { id, ...data },
     });
   }
 }
@@ -103,50 +81,55 @@ async function seedHexagrams() {
   });
 
   for (const h of hexSlice) {
-    const upper = await prisma.trigram.findFirstOrThrow({
-      where: { key: h.upper },
-    });
-    const lower = await prisma.trigram.findFirstOrThrow({
-      where: { key: h.lower },
-    });
+    const canonical = HEXAGRAMS.find((c) => c.id === h.id);
 
-    await prisma.hexagram.upsert({
-      where: { id: h.id },
-      update: {
-        key: h.key,
-        slug: slugify(h.name ?? `hexagram-${h.id}`),
-        name: (h.name ?? "").trim(),
-        judgment: (h.judgment ?? "").trim(),
-        imageText: h.imageText ?? null,
-        comment: h.comment ? String(h.comment).trim() : null,
-        footnote: h.footnote ? String(h.footnote).trim() : null,
-        upperTrigramId: upper.id,
-        lowerTrigramId: lower.id,
-      },
-      create: {
-        id: h.id,
-        key: h.key,
-        slug: slugify(h.name ?? `hexagram-${h.id}`),
-        name: (h.name ?? "").trim(),
-        judgment: (h.judgment ?? "").trim(),
-        imageText: h.imageText ?? null,
-        comment: h.comment ? String(h.comment).trim() : null,
-        footnote: h.footnote ? String(h.footnote).trim() : null,
-        upperTrigramId: upper.id,
-        lowerTrigramId: lower.id,
-        tags: [], // keep empty by default; can be filled later
-      },
-    });
-
-    // Lines (1..6)
-    const lines = toLinesArray(h.lines as Lines);
-    for (const l of lines) {
-      await prisma.line.upsert({
-        where: { hexagramId_number: { hexagramId: h.id, number: l.number } },
-        update: { text: l.text },
-        create: { hexagramId: h.id, number: l.number, text: l.text },
-      });
+    if (canonical?.upper !== h.upper || canonical.lower !== h.lower) {
+      throw new Error(`Hexagram ${h.id}: trigrams don't match canonical data`);
     }
+    const canonicalFields = {
+      binary: hexagramBinary(canonical),
+      hanzi: canonical.hanzi,
+      pinyin: canonical.pinyin,
+      upperTrigramId: trigramByKey(canonical.upper).id,
+      lowerTrigramId: trigramByKey(canonical.lower).id,
+    };
+    const lines = toLinesArray(h.lines as Lines);
+
+    // One transaction per hexagram: a single round trip over Accelerate
+    await prisma.$transaction([
+      prisma.hexagram.upsert({
+        where: { id: h.id },
+        update: {
+          key: h.key,
+          slug: slugify(h.name ?? `hexagram-${h.id}`),
+          ...canonicalFields,
+          name: (h.name ?? "").trim(),
+          judgment: (h.judgment ?? "").trim(),
+          imageText: h.imageText ?? null,
+          comment: h.comment ? String(h.comment).trim() : null,
+          footnote: h.footnote ? String(h.footnote).trim() : null,
+        },
+        create: {
+          id: h.id,
+          key: h.key,
+          slug: slugify(h.name ?? `hexagram-${h.id}`),
+          ...canonicalFields,
+          name: (h.name ?? "").trim(),
+          judgment: (h.judgment ?? "").trim(),
+          imageText: h.imageText ?? null,
+          comment: h.comment ? String(h.comment).trim() : null,
+          footnote: h.footnote ? String(h.footnote).trim() : null,
+          tags: [], // keep empty by default; can be filled later
+        },
+      }),
+      ...lines.map((l) =>
+        prisma.line.upsert({
+          where: { hexagramId_number: { hexagramId: h.id, number: l.number } },
+          update: { text: l.text },
+          create: { hexagramId: h.id, number: l.number, text: l.text },
+        }),
+      ),
+    ]);
   }
 }
 
@@ -154,11 +137,13 @@ export async function main() {
   await seedTrigrams();
   await seedHexagrams();
   const hexCount = await prisma.hexagram.count();
+
   console.log("Hexagrams in DB:", hexCount);
 
   const first = await prisma.hexagram.findFirst({
     include: { upperTrigram: true, lowerTrigram: true, lines: true },
   });
+
   console.dir(first, { depth: null });
   console.log("✅ Seed complete");
 }

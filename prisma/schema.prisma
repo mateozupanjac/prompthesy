@@ -1,7 +1,6 @@
 // prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
-//   output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -13,6 +12,9 @@ datasource db {
 model Trigram {
   id      Int    @id // 1..8 (QIAN,KUN,ZHEN,KAN,GEN,XUN,LI,DUI)
   key     String @unique
+  binary  String @unique @db.Char(3) // bottom → top, 1 = yang, 0 = yin
+  hanzi   String
+  pinyin  String
   name    String 
   meaning String?
 
@@ -24,6 +26,9 @@ model Hexagram {
   id          Int     @id
   key         String  @unique
   slug        String  @unique
+  binary      String  @unique @db.Char(6) // bottom → top: lower trigram + upper trigram
+  hanzi       String // traditional characters
+  pinyin      String
   name        String  
   judgment    String  
   imageText   String?
@@ -41,6 +46,7 @@ model Hexagram {
   baseForReadings   Reading[] @relation("reading_base_hex")
   resultForReadings Reading[] @relation("reading_result_hex")
 
+  @@unique([upperTrigramId, lowerTrigramId])
   @@index([slug])
 }
 
