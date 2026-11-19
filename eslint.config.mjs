@@ -90,6 +90,8 @@ export default defineConfig([globalIgnores([
         "react/prop-types": "off",
         "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off",
+        // TypeScript already type-checks JSX props; this rule flags React Three Fiber props (position, args, …)
+        "react/no-unknown-property": "off",
         "react-hooks/exhaustive-deps": "off",
         "jsx-a11y/click-events-have-key-events": "warn",
         "jsx-a11y/interactive-supports-focus": "warn",
