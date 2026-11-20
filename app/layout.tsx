@@ -1,12 +1,17 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@heroui/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
+import {
+  fontDisplay,
+  fontHanzi,
+  fontNotoDisplay,
+  fontNotoSerif,
+  fontSerif,
+} from "@/config/fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -20,10 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+  themeColor: "#0C0A09",
 };
 
 export default function RootLayout({
@@ -36,16 +38,17 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen text-foreground bg-background font-sans antialiased",
-          fontSans.variable,
+          "min-h-screen text-foreground bg-background font-serif antialiased",
+          fontDisplay.variable,
+          fontSerif.variable,
+          fontHanzi.variable,
+          fontNotoDisplay.variable,
+          fontNotoSerif.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <main className="container mx-auto  pt-16 px-6 flex-grow">
-              {children}
-            </main>
-          </div>
+        {/* Dark only for now; a light "porcelain" theme comes later */}
+        <Providers themeProps={{ attribute: "class", forcedTheme: "dark" }}>
+          <main className="min-h-screen">{children}</main>
         </Providers>
       </body>
     </html>

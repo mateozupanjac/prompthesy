@@ -1,11 +1,7 @@
-import { title } from "@/components/primitives";
+import { CastingRitual } from "@/components/casting/casting-ritual";
 
-// TODO: not implemented yet
+export const metadata = { title: "Ask a question" };
+
 export default function NewReadingPage() {
-  return (
-    <div>
-      <h1 className={title()}>New reading</h1>
-      <p className="mt-4 text-default-500">Coming soon.</p>
-    </div>
-  );
+  return <CastingRitual />;
 }

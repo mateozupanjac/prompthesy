@@ -75,6 +75,14 @@ export function parseCreateReadingInput(body: unknown): CreateReadingInput {
   return input;
 }
 
+const hexagramSummary = {
+  id: true,
+  name: true,
+  hanzi: true,
+  pinyin: true,
+  binary: true,
+} as const;
+
 export async function createReading(input: CreateReadingInput) {
   // The seed is always generated server-side: accepting one from the client
   // would let it pick the outcome. It's stored so the tosses can be audited.
@@ -97,8 +105,14 @@ export async function createReading(input: CreateReadingInput) {
       userId: input.userId ?? null,
     },
     omit: { seed: true, userId: true },
+    include: {
+      baseHexagram: { select: hexagramSummary },
+      resultHexagram: { select: hexagramSummary },
+    },
   });
 }
+
+export type CreatedReading = Awaited<ReturnType<typeof createReading>>;
 
 const hexagramWithContent = {
   include: {
